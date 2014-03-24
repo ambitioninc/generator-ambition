@@ -1,6 +1,5 @@
 'use strict';
-var grunt = require('grunt'),
-    yeoman = require('yeoman-generator');
+var yeoman = require('yeoman-generator');
 
 module.exports = yeoman.generators.Base.extend({
     initializing: function() {
@@ -8,11 +7,8 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     install: function() {
-        var done = this.async();
-
         this.installDependencies({
-            skipInstall: this.options['skip-install'],
-            callback: done
+            skipInstall: this.options['skip-install']
         });
     },
 
