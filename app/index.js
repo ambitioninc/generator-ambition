@@ -7,6 +7,15 @@ module.exports = yeoman.generators.Base.extend({
         this.pkg = require('../package.json');
     },
 
+    install: function() {
+        var done = this.async();
+
+        this.installDependencies({
+            skipInstall: this.options['skip-install'].
+            callback: done
+        });
+    },
+
     prompting: function() {
         var done = this.async(),
             prompts,
@@ -39,7 +48,7 @@ module.exports = yeoman.generators.Base.extend({
         this.prompt(prompts, function(answers) {
             var options = answers.options;
 
-            self.projectName = answers.projectName;
+            self.projectName = answers.projectName.toLowerCase().replace(/\W/g, '-');
             self.es6 = options.indexOf('es6') !== -1;
             self.jquery = options.indexOf('jquery') !== -1;
             done();
@@ -51,13 +60,17 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     writing: function() {
-        var projectDir = this.projectName.toLowerCase().replace(/\s/g, '-'),
+        var projectDir = this.projectName,
             srcDir = 'src/' + projectDir,
             testDir = srcDir + '/tests';
 
         //make the grunt and package files
         this.template('package.json');
         this.template('gruntfile.js');
+
+        //copy the lint configs
+        this.copy('.jshintrc', '.jshintrc');
+        this.copy('.jscs.json', '.jscs.json');
 
         //make the directories
         this.mkdir('src');
@@ -67,5 +80,10 @@ module.exports = yeoman.generators.Base.extend({
         //make default app and app_test files
         this.write(srcDir + '/app.js', '//app.js');
         this.write(testDir + '/app_tests.js', '//app_tests.js');
+
+        if (this.es6 || this.jquery) {
+            this.template('bower.json');
+            this.copy('.bowerrc', '.bowerrc');
+        }
     }
 });
