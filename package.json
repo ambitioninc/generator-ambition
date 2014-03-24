@@ -1,7 +1,7 @@
 {
   "name": "generator-ambition",
   "version": "0.0.1",
-  "description": "A generator for Ambition JS projects.",
+  "description": "Yeoman generator for Ambition.",
   "keywords": [
     "Ambition",
     "yeoman-generator"
