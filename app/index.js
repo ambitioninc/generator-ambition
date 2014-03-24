@@ -11,7 +11,7 @@ module.exports = yeoman.generators.Base.extend({
         var done = this.async();
 
         this.installDependencies({
-            skipInstall: this.options['skip-install'].
+            skipInstall: this.options['skip-install'],
             callback: done
         });
     },
@@ -82,6 +82,17 @@ module.exports = yeoman.generators.Base.extend({
         this.write(testDir + '/app_tests.js', '//app_tests.js');
 
         if (this.es6 || this.jquery) {
+            this.bowerDependencies = {};
+
+            if (this.es6) {
+                this.bowerDependencies['traceur-runtime'] = '>=0.0.30';
+            }
+
+            if (this.jquery) {
+                this.bowerDependencies.jquery = '>=1.9.0';
+            }
+
+            this.bowerDependencies = JSON.stringify(this.bowerDependencies).replace(/,/g, ',\n  ');
             this.template('bower.json');
             this.copy('.bowerrc', '.bowerrc');
         }

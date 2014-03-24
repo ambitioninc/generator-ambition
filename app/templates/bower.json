@@ -1,17 +1,6 @@
 {
   "name": "<%= projectName %>",
   "version": "0.0.1",
-  "main": ["./<%= projectName %>"],
-  "dependencies": {
-    <% if (traceur) { %>
-    "traceur-runtime": ">=0.0.30"
-    <% } %>
-    <% if (jquery) { %>
-    "jquery": ">=1.9.0"
-    <% } %>
-    <% if (traceur && jquery) { %>
-    "traceur-runtime": ">=0.0.30",
-    "jquery": ">=1.9.0"
-    <% } %>
-  }
+  "main": ["./src/<%= projectName %>"],
+  "dependencies": <%= bowerDependencies %>
 }
