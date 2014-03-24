@@ -1,6 +1,6 @@
 'use strict';
 var grunt = require('grunt'),
-    yeoman = require('yeoman');
+    yeoman = require('yeoman-generator');
 
 module.exports = yeoman.generators.Base.extend({
     initializing: function() {
