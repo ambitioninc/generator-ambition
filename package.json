@@ -1,0 +1,36 @@
+{
+  "name": "generator-ambition",
+  "version": "0.0.1",
+  "description": "A generator for Ambition JS projects.",
+  "keywords": [
+    "Ambition",
+    "yeoman-generator"
+  ],
+  "homepage": "https://github.com/ambitioninc/generator-ambition",
+  "author": {
+    "name": "Jeff McRiffey",
+    "email": "jeff.mcriffey@tryambition.com",
+    "url": "https://github.com/jmcriffey"
+  },
+  "main": "app/index.js",
+  "files": [
+    "app"
+  ],
+  "repository": "ambitioninc/generator-ambition",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "yeoman-generator": "^0.17.0-pre.2",
+    "grunt": "^0.4.4"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ]
+}
