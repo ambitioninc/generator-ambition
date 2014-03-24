@@ -23,7 +23,7 @@ module.exports = yeoman.generators.Base.extend({
             message: 'What would you like to call your project?'
         }, {
             type: 'checkbox',
-            name: 'features',
+            name: 'options',
             message: 'Please tell me more about your project.',
             choices: [{
                 name: 'Does your project use ECMAScript 6?',
@@ -33,17 +33,15 @@ module.exports = yeoman.generators.Base.extend({
                 name: 'Does your project use jQuery?',
                 value: 'jquery',
                 checked: false
-            }, {
-                name: 'Is there a fire inside you that cannot be extinguished?',
-                value: 'fire',
-                checked: true
             }]
         }];
 
         this.prompt(prompts, function(answers) {
+            var options = answers.options;
+
             self.projectName = answers.projectName;
-            self.es6 = answers.es6;
-            self.jquery = answers.jquery;
+            self.es6 = options.indexOf('es6') !== -1;
+            self.jquery = options.indexOf('jquery') !== -1;
             done();
         });
     },
