@@ -107,7 +107,7 @@ module.exports = function(grunt) {
 
         merge(gruntConfig, {
             jasmine: {
-                src: <% if (this.es6) { %> '.tmp/tmp-test.min.js' <% else { %> srcFiles <% }%>,
+                src: <% if (this.es6) { %> '.tmp/tmp-test.min.js' <% } else { %> srcFiles <% }%>,
                 options: {
                     vendor: getVendorFiles(),
                     <% if (!this.es6) { %> specs: testFiles, <% } %>
