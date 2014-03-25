@@ -4,6 +4,7 @@ Yeoman generator for Ambition.
 
 ## Table of Contents
 1. [Installation](#installation)
+1. [Usage](#usage)
 1. [Options](#options)
 1. [Structure](#structure)
 
@@ -21,7 +22,7 @@ To install the Ambition generator:
 npm install -g generator-ambition
 ```
 
-## Usage
+## <a name="usage">Usage</a>
 
 Using the Ambition generator is simple:
 
