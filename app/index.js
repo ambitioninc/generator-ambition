@@ -50,19 +50,35 @@ module.exports = yeoman.generators.Base.extend({
             }]
         }];
 
-        this.prompt(prompts, function(answers) {
-            var options = answers.options,
-                hasOption = function hasOption(option) {
-                    return options.indexOf(option) !== -1;
-                };
+        function getProjectName() {
+            self.prompt(prompts.slice(0, 1), function(answers) {
+                self.projectName = answers.projectName.toLowerCase().replace(/\W/g, '-');
 
-            self.projectName = answers.projectName.toLowerCase().replace(/\W/g, '-');
-            self.browserstack = hasOption('browserstack');
-            self.style = hasOption('style');
-            self.es6 = hasOption('es6');
-            self.jquery = hasOption('jquery');
-            done();
-        });
+                if (!self.projectName) {
+                    getProjectName();
+                } else {
+                    getProjectOptions();
+                }
+            });
+        }
+
+        function getProjectOptions() {
+            self.prompt(prompts.slice(1), function(answers) {
+                var options = answers.options,
+                    hasOption = function hasOption(option) {
+                        return options.indexOf(option) !== -1;
+                    };
+
+                self.browserstack = hasOption('browserstack');
+                self.style = hasOption('style');
+                self.es6 = hasOption('es6');
+                self.jquery = hasOption('jquery');
+                done();
+            });
+        }
+
+        //start the prompts
+        getProjectName();
     },
 
     configuring: function() {

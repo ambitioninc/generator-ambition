@@ -27,16 +27,15 @@ module.exports = function(grunt) {
     function getVendorFiles() {
         var files = [];
         <% if (jquery) { %>
-            files.push('lib/jquery/jquery.min.js');
+        files.push('lib/jquery/jquery.min.js');
         <% } %><% if (es6) { %>
-            files.push('lib/traceur/traceur-runtime.min.js');
+        files.push('lib/traceur-runtime/traceur-runtime.min.js');
         <% } %>return files;
     }
 
     function addBuildTasks() {
-        var uglifyConfig = {};
-        <% if (style) { %>
-        var stylusConfig = {};
+        var uglifyConfig = {}<% if (style) { %>,
+            stylusConfig = {};
         //generate the css file name
         npmTasks.push('grunt-contrib-stylus');
         stylusConfig['build/<%= projectName %>.css'] = styleFiles;
@@ -49,14 +48,14 @@ module.exports = function(grunt) {
                     import: ['nib']
                 }
             }
-        );
+        });
 
         grunt.registerTask('buildStyle', ['stylus']);
-        <% } %>
-        //generate the uglify file names
-        uglifyConfig['build/<%= projectName %>.js'] = srcFiles;
+        <% } else { %>;<% } %>
         <% if (es6) { %>
         npmTasks.push('grunt-traceur-compiler');
+        uglifyConfig['build/<%= projectName %>.js'] = '.tmp/src.js';
+        uglifyConfig['.tmp/tests.js'] = '.tmp/tests.js';
 
         merge(gruntConfig, {
             traceur: {
@@ -64,15 +63,20 @@ module.exports = function(grunt) {
                     experimental: true
                 },
                 src: {
-                    '.tmp/tmp-src.js': 'src/<%= projectName %>/app.js'
+                    files: {
+                        '.tmp/src.js': 'src/<%= projectName %>/app.js'
+                    }
                 },
                 test: {
-                    '.tmp/tmp-test.js': testFiles
+                    files: {
+                        '.tmp/tests.js': testFiles
+                    }
                 }
             }
         });
         <% } else { %>
         npmTasks.push('grunt-jscs-checker');
+        uglifyConfig['build/<%= projectName %>.js'] = srcFiles;
 
         merge(gruntConfig, {
             jscs: {
@@ -83,8 +87,8 @@ module.exports = function(grunt) {
             }
         });
         <% } %>
-        <% if (browserstack) { %>
-            uglifyConfig['.tmp/' + 'tmp-test.min' + '.js'] = '.tmp/tmp-test.js';
+        <% if (browserstack && !es6) { %>
+            uglifyConfig['.tmp/tests.js'] = testFiles;
         <% } %>
         npmTasks.push('grunt-contrib-uglify');
         merge(gruntConfig, {
@@ -104,10 +108,10 @@ module.exports = function(grunt) {
 
         merge(gruntConfig, {
             jasmine: {
-                src: <% if (this.es6) { %>'.tmp/tmp-test.min.js'<% } else { %>srcFiles<% }%>,
+                src: <% if (es6) { %>'.tmp/tests.js'<% } else { %>srcFiles<% }%>,
                 options: {
-                    vendor: getVendorFiles(),
-                    <% if (!this.es6) { %>specs: testFiles,<% } %>
+                    vendor: getVendorFiles(),<% if (!es6) { %>
+                    specs: testFiles,<% } %>
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: '.tmp/coverage.json',
@@ -147,10 +151,11 @@ module.exports = function(grunt) {
             }
         });
     }<% if (browserstack) { %>
-    function addBrowserStackTasks() {
+    function addBrowserstackTasks() {
+        testTasks.push('copy');
         testTasks.push('browserstack_runner');
         npmTasks.push('browserstack-runner');
-        npmTasks.push('copy');
+        npmTasks.push('grunt-contrib-copy');
 
         merge(gruntConfig, {
             'browserstack_runner': {},
@@ -160,17 +165,17 @@ module.exports = function(grunt) {
                     dest: '.tmp/jasmine.js'
                 },
                 tests: {
-                    src: testFiles,
+                    src: <% if(es6) { %>'.'<% } else {%>testFiles<% } %>,
                     dest: '.tmp/tests.js'
                 }
             }
-        }
+        });
     }
 
     <% } %>
     <% if (es6) { %>
     function registerES6() {
-        grunt.registerTask('buildSrc', ['copy', 'traceur', 'uglify']);
+        grunt.registerTask('buildSrc', ['traceur', 'uglify']);
 
         if (isDev) {
             testTasks = [
@@ -213,7 +218,7 @@ module.exports = function(grunt) {
 
     //browserstack only
     if (isBrowserStack) {
-        addBrowerstackTasks();
+        addBrowserstackTasks();
     }<% } %>
 
     //add the test tasks
