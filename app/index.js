@@ -31,12 +31,16 @@ module.exports = yeoman.generators.Base.extend({
             name: 'options',
             message: 'Please tell me more about your project.',
             choices: [{
-                name: 'Does your project use ECMAScript 6?',
-                value: 'es6',
+                name: 'Does your project use CSS?',
+                value: 'style',
                 checked: false
             }, {
                 name: 'Does your project use jQuery?',
                 value: 'jquery',
+                checked: false
+            }, {
+                name: 'Does your project use ECMAScript 6?',
+                value: 'es6',
                 checked: false
             }]
         }];
@@ -77,6 +81,7 @@ module.exports = yeoman.generators.Base.extend({
         this.write(srcDir + '/app.js', '//app.js');
         this.write(testDir + '/app_tests.js', '//app_tests.js');
 
+        //bower
         if (this.es6 || this.jquery) {
             this.bowerDependencies = {};
 
@@ -91,6 +96,13 @@ module.exports = yeoman.generators.Base.extend({
             this.bowerDependencies = JSON.stringify(this.bowerDependencies).replace(/,/g, ',\n  ');
             this.template('bower.json');
             this.copy('.bowerrc', '.bowerrc');
+        }
+
+        //stylus
+        if (this.style) {
+            this.mkdir('style');
+            this.mkdir('style/variables');
+            this.write('style/variables/all.styl', '');
         }
     }
 });
