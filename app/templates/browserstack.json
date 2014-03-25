@@ -1,0 +1,42 @@
+{
+    "test_framework": "jasmine",
+    "test_path": "browserstack.html",
+    "timeout": 120,
+    "browsers": [{
+        "browser": "chrome",
+        "browser_version": "latest",
+        "device": null,
+        "os": "Windows",
+        "os_version": "7"
+    }, {
+        "browser": "firefox",
+        "browser_version": "latest",
+        "device": null,
+        "os": "Windows",
+        "os_version": "7"
+    }, {
+        "browser": "ie",
+        "browser_version": "11.0",
+        "device": null,
+        "os": "Windows",
+        "os_version": "7"
+    }, {
+        "browser": "ie",
+        "browser_version": "10.0",
+        "device": null,
+        "os": "Windows",
+        "os_version": "7"
+    }, {
+        "browser": "ie",
+        "browser_version": "9.0",
+        "device": null,
+        "os": "Windows",
+        "os_version": "7"
+    }, {
+        "browser": "safari",
+        "browser_version": "latest",
+        "device": null,
+        "os": "OS X",
+        "os_version": "Mavericks"
+    }]
+}

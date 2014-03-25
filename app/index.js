@@ -42,6 +42,10 @@ module.exports = yeoman.generators.Base.extend({
                 name: 'Does your project use ECMAScript 6?',
                 value: 'es6',
                 checked: false
+            }, {
+                name: 'Do you want to run tests on browserstack?',
+                value: 'browserstack',
+                checked: false
             }]
         }];
 
@@ -49,6 +53,8 @@ module.exports = yeoman.generators.Base.extend({
             var options = answers.options;
 
             self.projectName = answers.projectName.toLowerCase().replace(/\W/g, '-');
+            self.browserstack = options.indexOf('browserstack') !== -1;
+            self.style = options.indexOf('style') !== 1;
             self.es6 = options.indexOf('es6') !== -1;
             self.jquery = options.indexOf('jquery') !== -1;
             done();
@@ -103,6 +109,11 @@ module.exports = yeoman.generators.Base.extend({
             this.mkdir('style');
             this.mkdir('style/variables');
             this.write('style/variables/all.styl', '');
+        }
+
+        if (this.browserstack) {
+            this.template('browserstack.json');
+            this.template('browserstack.html');
         }
     }
 });

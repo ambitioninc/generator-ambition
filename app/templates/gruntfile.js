@@ -154,9 +154,13 @@ module.exports = function(grunt) {
         merge(gruntConfig, {
             'browserstack_runner': {},
             'copy': {
-                test: {
+                jasmine: {
                     src: 'node_modules/grunt-contrib-jasmine/vendor/jasmine-1.3.1/jasmine.js',
                     dest: '.tmp/jasmine.js'
+                },
+                tests: {
+                    src: testFiles,
+                    dest: '.tmp/tests.js'
                 }
             }
         }

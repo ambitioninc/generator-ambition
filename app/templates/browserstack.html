@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Browserstack Spec Runner</title>
+        <script type="text/javascript" src=".tmp/jasmine.js"></script>
+    </head>
+    <body>
+        <div id="<%= projectName %>"></div>
+
+        <% if (es6) { %>
+        <script src="lib/traceur-runtime.min.js"></script>
+        <% } %>
+        <script src=".tmp/tests.js"></script>
+        <script>
+            (function() {
+                var jasmineEnv = jasmine.getEnv();
+                jasmineEnv.updateInterval = 1000;
+                jasmineEnv.execute();
+            }());
+        </script>
+    </body>
+</html>
