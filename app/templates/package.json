@@ -1,11 +1,14 @@
 {
   "name": "<%= projectName %>",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "grunt test"
+  },
   "dependencies": {
     "grunt-cli": "^0.1.13",
     "grunt": "^0.4.2",<% if (style) { %>
     "grunt-contrib-stylus": "^0.13.2",<% } %><% if (es6) { %>
-    "grunt-traceur-compiler": "0.0.6",<% } %>
+    "grunt-traceur-compiler": <%= tracuerVersion %>,<% } %>
     "grunt-contrib-uglify": "^0.4.0"
   },
   "devDependencies": {
@@ -13,7 +16,8 @@
     "grunt-contrib-watch": "^0.5.3",
     "grunt-contrib-jshint": "^0.8.0",<% if (browserstack) { %>
     "grunt-contrib-copy": "^0.5.0",
-    "browserstack-runner": "^0.1.6",<% } %>
+    "browserstack-runner": "^0.1.6",<% } %><% if (!es6) { %>
+    "grunt-jscs-checker": "^0.4.1",<% } %>
     "grunt-jsonlint": "^1.0.4",
     "grunt-template-jasmine-istanbul": "^0.2.6"
   }

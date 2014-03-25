@@ -2,24 +2,23 @@ module.exports = function(grunt) {
     'use strict';
 
     var pkg = grunt.file.readJSON('package.json'),
-        isDev = process.env.NODE_ENV !== 'production',<% if (browserStack) { %>
+        isDev = process.env.NODE_ENV !== 'production',<% if (browserstack) { %>
         isBrowserStack = process.env.BROWSERSTACK_KEY && process.env.BROWSERSTACK_USERNAME,<% } %>
-        srcFiles = ['src/**/*.js', '!src/**/test/*_tests.js'],
-        <% if (style) { %>
-        styleFiles = ['style/**/*.styl'], <% } %>
-        testFiles = ['src/**/test/*_tests.js'],
+        srcFiles = ['src/**/*.js', '!src/**/test/*_tests.js'],<% if (style) { %>
+        styleFiles = ['style/**/*.styl'],<% } %>
+        testFiles = ['src/**/tests/*_tests.js'],
         lintFiles = ['gruntfile.js'].concat(srcFiles, testFiles),
-        jsonFiles = ['.jshintrc', './**/*.json'],
+        jsonFiles = ['.jshintrc', '*.json'],
         gruntConfig = {pkg: pkg},
         testTasks = [],
         npmTasks = [];
 
     function merge() {
-        var dest = Array.prototype.slice.call(arguments, 0, 1),
+        var dest = arguments[0],
             srcs = Array.prototype.slice.call(arguments, 1);
 
         srcs.forEach(function(src) {
-            src.keys().forEach(function(key) {
+            Object.keys(src).forEach(function(key) {
                 dest[key] = src[key];
             });
         });
@@ -35,13 +34,11 @@ module.exports = function(grunt) {
     }
 
     function addBuildTasks() {
-        var stylusConfig = {},
-            uglifyConfig = {};
-
-        npmTasks.push('grunt-contrib-stylus');
-        npmTasks.push('grunt-contrib-uglify');
+        var uglifyConfig = {};
         <% if (style) { %>
+        var stylusConfig = {};
         //generate the css file name
+        npmTasks.push('grunt-contrib-stylus');
         stylusConfig['build/<%= projectName %>.css'] = styleFiles;
 
         merge(gruntConfig, {
@@ -53,9 +50,11 @@ module.exports = function(grunt) {
                 }
             }
         );
+
+        grunt.registerTask('buildStyle', ['stylus']);
         <% } %>
         //generate the uglify file names
-        uglifyConfig['build/<%= projectName %>.js'] = jsFiles;
+        uglifyConfig['build/<%= projectName %>.js'] = srcFiles;
         <% if (es6) { %>
         npmTasks.push('grunt-traceur-compiler');
 
@@ -72,8 +71,6 @@ module.exports = function(grunt) {
                 }
             }
         });
-
-        uglifyConfig['.tmp/' + 'tmp-test.min' + '.js'] = '.tmp/tmp-test.js';
         <% } else { %>
         npmTasks.push('grunt-jscs-checker');
 
@@ -86,6 +83,10 @@ module.exports = function(grunt) {
             }
         });
         <% } %>
+        <% if (browserstack) { %>
+            uglifyConfig['.tmp/' + 'tmp-test.min' + '.js'] = '.tmp/tmp-test.js';
+        <% } %>
+        npmTasks.push('grunt-contrib-uglify');
         merge(gruntConfig, {
             uglify: {
                 compile: {
@@ -103,10 +104,10 @@ module.exports = function(grunt) {
 
         merge(gruntConfig, {
             jasmine: {
-                src: <% if (this.es6) { %> '.tmp/tmp-test.min.js' <% } else { %> srcFiles <% }%>,
+                src: <% if (this.es6) { %>'.tmp/tmp-test.min.js'<% } else { %>srcFiles<% }%>,
                 options: {
                     vendor: getVendorFiles(),
-                    <% if (!this.es6) { %>specs: testFiles, <% } %>
+                    <% if (!this.es6) { %>specs: testFiles,<% } %>
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: '.tmp/coverage.json',
@@ -122,7 +123,7 @@ module.exports = function(grunt) {
             },
 
             jshint: {
-               test: lintFiles,
+                test: lintFiles,
                 options: {
                     jshintrc: '.jshintrc'
                 }
@@ -134,20 +135,20 @@ module.exports = function(grunt) {
                 }
             },
 
-            watch: {
+            watch: {<% if (style) { %>
                 style: {
                     files: styleFiles,
                     tasks: ['buildStyle']
-                },
+                },<% } %>
                 src: {
                     files: srcFiles,
                     tasks: ['buildSrc']
                 }
             }
         });
-    }<% if (browserStack) { %>
+    }<% if (browserstack) { %>
     function addBrowserStackTasks() {
-        teskTasks.push('browserstack_runner');
+        testTasks.push('browserstack_runner');
         npmTasks.push('browserstack-runner');
         npmTasks.push('copy');
 
@@ -169,12 +170,10 @@ module.exports = function(grunt) {
     <% } %>
     <% if (es6) { %>
     function registerES6() {
-        grunt.registerTask('buildStyle', ['stylus']);
         grunt.registerTask('buildSrc', ['copy', 'traceur', 'uglify']);
-        grunt.registerTask('build', ['buildStyle', 'buildSrc']);
 
         if (isDev) {
-            teskTasks = [
+            testTasks = [
                 'jsonlint',
                 'jshint',
                 'build',
@@ -185,14 +184,10 @@ module.exports = function(grunt) {
     }
     <% } else { %>
     function registerES5() {
-        var testTasks;
-
-        grunt.registerTask('buildStyle', ['stylus']);
         grunt.registerTask('buildSrc', ['uglify']);
-        grunt.registerTask('build', ['buildStyle', 'buildSrc']);
 
         if (isDev) {
-            teskTasks = [
+            testTasks = [
                 'jsonlint',
                 'jshint',
                 'jscs',
@@ -214,12 +209,21 @@ module.exports = function(grunt) {
     grunt.initConfig(gruntConfig);
     <% if (es6) { %>
     registerES6();<% } else { %>
-    resgisterES5();<% } %><% if (browserStack) { %>
+    registerES5();<% } %><% if (browserstack) { %>
 
     //browserstack only
     if (isBrowserStack) {
         addBrowerstackTasks();
     }<% } %>
+
     //add the test tasks
     grunt.registerTask('test', testTasks);
+
+    //add the build task
+    grunt.registerTask('build', [<% if(style) { %>'buildStyle', <% } %>'buildSrc']);
+
+    //load the tasks
+    npmTasks.forEach(function(task) {
+        grunt.loadNpmTasks(task);
+    });
 };

@@ -4,6 +4,7 @@ var yeoman = require('yeoman-generator');
 module.exports = yeoman.generators.Base.extend({
     initializing: function() {
         this.pkg = require('../package.json');
+        this.traceurVersion = '0.0.31';
     },
 
     install: function() {
@@ -43,20 +44,23 @@ module.exports = yeoman.generators.Base.extend({
                 value: 'es6',
                 checked: false
             }, {
-                name: 'Do you want to run tests on browserstack?',
+                name: 'Do you want to run tests on Browserstack?',
                 value: 'browserstack',
                 checked: false
             }]
         }];
 
         this.prompt(prompts, function(answers) {
-            var options = answers.options;
+            var options = answers.options,
+                hasOption = function hasOption(option) {
+                    return options.indexOf(option) !== -1;
+                };
 
             self.projectName = answers.projectName.toLowerCase().replace(/\W/g, '-');
-            self.browserstack = options.indexOf('browserstack') !== -1;
-            self.style = options.indexOf('style') !== 1;
-            self.es6 = options.indexOf('es6') !== -1;
-            self.jquery = options.indexOf('jquery') !== -1;
+            self.browserstack = hasOption('browserstack');
+            self.style = hasOption('style');
+            self.es6 = hasOption('es6');
+            self.jquery = hasOption('jquery');
             done();
         });
     },
@@ -74,6 +78,10 @@ module.exports = yeoman.generators.Base.extend({
         this.template('package.json');
         this.template('gruntfile.js');
 
+        //make default app and app_test files
+        this.template('app.js', srcDir + '/app.js');
+        this.template('app_tests.js', testDir + '/app_tests.js');
+
         //copy the lint configs
         this.copy('.jshintrc', '.jshintrc');
         this.copy('.jscs.json', '.jscs.json');
@@ -83,16 +91,12 @@ module.exports = yeoman.generators.Base.extend({
         this.mkdir(srcDir);
         this.mkdir(testDir);
 
-        //make default app and app_test files
-        this.write(srcDir + '/app.js', '//app.js');
-        this.write(testDir + '/app_tests.js', '//app_tests.js');
-
         //bower
         if (this.es6 || this.jquery) {
             this.bowerDependencies = {};
 
             if (this.es6) {
-                this.bowerDependencies['traceur-runtime'] = '>=0.0.30';
+                this.bowerDependencies['traceur-runtime'] = '>=' + this.traceurVersion;
             }
 
             if (this.jquery) {
@@ -111,6 +115,7 @@ module.exports = yeoman.generators.Base.extend({
             this.write('style/variables/all.styl', '');
         }
 
+        //browserstack
         if (this.browserstack) {
             this.template('browserstack.json');
             this.template('browserstack.html');
