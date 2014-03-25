@@ -63,7 +63,7 @@ True to automatically run your Jasmine tests on Browserstack. You must set appro
 
 ## Structure
 
-Save `.styl` files to the `style/` folder. Save `.js` files to appropriate modules in the `src/` folder. Save tests in each module's `tests\` folder.
+Save `.styl` files to the `style/` folder. Save `.js` files to appropriate modules in the `src/` folder. Save tests in each module's `tests/` folder.
 
 Example file tree (included CSS and jQuery):
 
