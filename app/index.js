@@ -1,15 +1,38 @@
 'use strict';
-var yeoman = require('yeoman-generator');
+var yeoman = require('yeoman-generator'),
+    rimraf = require('rimraf'),
+    fs = require('fs');
 
 module.exports = yeoman.generators.Base.extend({
     initializing: function() {
-        this.pkg = require('../package.json');
-        this.traceurVersion = '0.0.31';
-    },
+        var self = this;
+        self.pkg = require('../package.json');
+        self.traceurVersion = '0.0.31';
 
-    install: function() {
-        this.installDependencies({
-            skipInstall: this.options['skip-install']
+        self.on('end', function() {
+            var done = self.async(),
+                cleanup = function cleanup() {
+                    if (self.jquery) {
+                        fs.writeFileSync(self.destinationRoot() + '/lib/jquery/jquery.js', self.readFileAsString(
+                            'lib/jquery/dist/jquery.js'
+                        ));
+                        fs.writeFileSync(self.destinationRoot() + '/lib/jquery/jquery.min.js', self.readFileAsString(
+                            'lib/jquery/dist/jquery.min.js'
+                        ));
+                        fs.writeFileSync(self.destinationRoot() + '/lib/jquery/jquery.min.map', self.readFileAsString(
+                            'lib/jquery/dist/jquery.min.map'
+                        ));
+
+                        rimraf.sync(self.destinationRoot() + '/lib/jquery/dist');
+                        rimraf.sync(self.destinationRoot() + '/lib/jquery/src');
+                    }
+                    done();
+                };
+
+            self.installDependencies({
+                skipInstall: self.options['skip-install'],
+                callback: cleanup
+            })
         });
     },
 

@@ -42,11 +42,11 @@ The Ambition generator will ask you several questions and generate app scaffoldi
 
 #### What would you like to call your project? (required)
 
-The name of your project. Used to create folder and files names.
+The name of your project. Used to create folder and file names.
 
 #### Does your project use CSS?
 
-True to include Stylus and automatic css compilation. The result is saved to `build/project-name.css`.
+True to include Stylus for automatic compilation. Save your `.styl` files to the `style` directory. The resulting css is saved to `build/project-name.css`.
 
 #### Does your project use jQuery?
 
@@ -60,4 +60,35 @@ True to include the Traceur compiler and runtime. The runtime files are saved to
 #### Do you want to run tests on Browserstack?
 
 True to automatically run your Jasmine tests on Browserstack. You must set appropriate `BROWSERSTACK_USERNAME` and `BROWSERSTACK_KEY` enviornment variables before testing. This task is ignored if both variables are not set.
+
+## Structure
+
+Save `.styl` files to the `style/` folder. Save `.js` files to appropriate modules in the `src/` folder. Save tests in each module's `tests\` folder.
+
+Example file tree (included CSS and jQuery):
+
+```shell
+my-app
+├── bower.json
+├── build
+│   └── my-app.js
+├── gruntfile.js
+├── lib
+│   └── jquery
+│       ├── MIT-LICENSE.txt
+│       ├── bower.json
+│       ├── jquery.js
+│       ├── jquery.min.js
+│       └── jquery.min.map
+├── myFile.js
+├── package.json
+├── src
+│   └── my-app
+│       ├── app.js
+│       └── tests
+│           └── app_tests.js
+└── style
+    └── variables
+        └── all.styl
+```
 

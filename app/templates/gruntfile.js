@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     var pkg = grunt.file.readJSON('package.json'),
         isDev = process.env.NODE_ENV !== 'production',<% if (browserstack) { %>
         isBrowserStack = process.env.BROWSERSTACK_KEY && process.env.BROWSERSTACK_USERNAME,<% } %>
-        srcFiles = ['src/**/*.js', '!src/**/test/*_tests.js'],<% if (style) { %>
+        srcFiles = ['src/**/*.js', '!src/**/tests/*_tests.js'],<% if (style) { %>
         styleFiles = ['style/**/*.styl'],<% } %>
         testFiles = ['src/**/tests/*_tests.js'],
         lintFiles = ['gruntfile.js'].concat(srcFiles, testFiles),
@@ -50,8 +50,7 @@ module.exports = function(grunt) {
             }
         });
 
-        grunt.registerTask('buildStyle', ['stylus']);
-        <% } else { %>;<% } %>
+        grunt.registerTask('buildStyle', ['stylus']);<% } else { %>;<% } %>
         <% if (es6) { %>
         npmTasks.push('grunt-traceur-compiler');
         uglifyConfig['build/<%= projectName %>.js'] = '.tmp/src.js';
