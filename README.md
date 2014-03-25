@@ -68,7 +68,7 @@ Save `.styl` files to the `style/` folder. Save `.js` files to appropriate modul
 Example file tree (included CSS and jQuery):
 
 ```shell
-my-app
+.
 ├── bower.json
 ├── build
 │   └── my-app.js
@@ -80,7 +80,6 @@ my-app
 │       ├── jquery.js
 │       ├── jquery.min.js
 │       └── jquery.min.map
-├── myFile.js
 ├── package.json
 ├── src
 │   └── my-app
