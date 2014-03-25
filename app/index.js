@@ -98,9 +98,10 @@ module.exports = yeoman.generators.Base.extend({
         this.template('app.js', srcDir + '/app.js');
         this.template('app_tests.js', testDir + '/app_tests.js');
 
-        //copy the lint configs
+        //copy the various configs
         this.copy('.jshintrc', '.jshintrc');
         this.copy('.jscs.json', '.jscs.json');
+        this.copy('.editorconfig', '.editorconfig');
 
         //make the directories
         this.mkdir('src');
