@@ -2,7 +2,12 @@
 
 Yeoman generator for Ambition.
 
-## Installation
+## Table of Contents
+1. [Installation](#installation)
+1. [Options](#options)
+1. [Structure](#structure)
+
+## <a name="installation">Installation</a>
 
 To install Yeoman:
 
@@ -36,7 +41,7 @@ To build your project (compiles js and/or css to the `build` directory):
 npm run build
 ```
 
-## Options
+## <a name="options">Options</a>
 
 The Ambition generator will ask you several questions and generate app scaffolding based on your answers.
 
@@ -61,7 +66,7 @@ True to include the Traceur compiler and runtime. The runtime files are saved to
 
 True to automatically run your Jasmine tests on Browserstack. You must set appropriate `BROWSERSTACK_USERNAME` and `BROWSERSTACK_KEY` enviornment variables before testing. This task is ignored if both variables are not set.
 
-## Structure
+## <a name="structure">Structure</a>
 
 Save `.styl` files to the `style` directory. Save `.js` files to appropriate modules in the `src` directory. Save tests in each module's `tests` directory.
 
