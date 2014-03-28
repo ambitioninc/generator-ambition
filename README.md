@@ -50,7 +50,7 @@ The Ambition generator will ask you several questions and generate app scaffoldi
 
 The name of your project. Used to create folder and file names.
 
-#### Does your project use CSS?
+#### Does your project use Stylus?
 
 True to include Stylus for automatic compilation. Save your `.styl` files to the `style` directory. The resulting css is saved to `build/project-name.css`.
 
@@ -66,6 +66,10 @@ True to include the Traceur compiler and runtime. The runtime files are saved to
 #### Do you want to run tests on Browserstack?
 
 True to automatically run your Jasmine tests on Browserstack. You must set appropriate `BROWSERSTACK_USERNAME` and `BROWSERSTACK_KEY` enviornment variables before testing. This task is ignored if both variables are not set.
+
+#### Do you want to exlcude JavaScript from your project?
+
+True to exclude JS compilation and testing tools from your project.
 
 ## <a name="structure">Structure</a>
 
