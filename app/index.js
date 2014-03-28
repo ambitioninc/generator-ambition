@@ -34,6 +34,10 @@ module.exports = yeoman.generators.Base.extend({
                 callback: cleanup
             })
         });
+
+        self.on('dependenciesInstalled', function() {
+            self.spawnCommand('grunt', ['build']);
+        });
     },
 
     prompting: function() {
