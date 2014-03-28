@@ -55,8 +55,8 @@ module.exports = yeoman.generators.Base.extend({
             name: 'options',
             message: 'Please tell me more about your project.',
             choices: [{
-                name: 'Does your project use CSS?',
-                value: 'style',
+                name: 'Does your project use Stylus?',
+                value: 'stylus',
                 checked: false
             }, {
                 name: 'Does your project use jQuery?',
@@ -69,6 +69,10 @@ module.exports = yeoman.generators.Base.extend({
             }, {
                 name: 'Do you want to run tests on Browserstack?',
                 value: 'browserstack',
+                checked: false
+            }, {
+                name: 'Do you want to exlcude JavaScript from your project?',
+                value: 'noJS',
                 checked: false
             }]
         }];
@@ -92,10 +96,12 @@ module.exports = yeoman.generators.Base.extend({
                         return options.indexOf(option) !== -1;
                     };
 
-                self.browserstack = hasOption('browserstack');
-                self.style = hasOption('style');
                 self.es6 = hasOption('es6');
-                self.jquery = hasOption('jquery');
+                self.es5 = !hasOption('noJS') && !self.es6;
+                self.jquery = hasOption('jquery') && (self.es5 || self.es6);
+                self.browserstack = hasOption('browserstack') && (self.es5 || self.es6);
+                self.stylus = hasOption('stylus');
+
                 done();
             });
         }
@@ -117,48 +123,48 @@ module.exports = yeoman.generators.Base.extend({
         this.template('package.json');
         this.template('gruntfile.js');
 
-        //make default app and app_test files
-        this.template('app.js', srcDir + '/app.js');
-        this.template('app_tests.js', testDir + '/app_tests.js');
-
-        //copy the various configs
-        this.copy('.jshintrc', '.jshintrc');
-        this.copy('.jscs.json', '.jscs.json');
+        //copy the common configs
         this.copy('.editorconfig', '.editorconfig');
 
-        //make the directories
-        this.mkdir('src');
-        this.mkdir(srcDir);
-        this.mkdir(testDir);
+        if (this.es5 || this.es6) {
+            //js files
+            this.copy('.jshintrc', '.jshintrc');
+            this.copy('.jscs.json', '.jscs.json');
+            this.template('app.js', srcDir + '/app.js');
+            this.template('app_tests.js', testDir + '/app_tests.js');
+            this.mkdir('src');
+            this.mkdir(srcDir);
+            this.mkdir(testDir);
 
-        //bower
-        if (this.es6 || this.jquery) {
-            this.bowerDependencies = {};
+            //bower
+            if (this.es6 || this.jquery) {
+                this.bowerDependencies = {};
 
-            if (this.es6) {
-                this.bowerDependencies['traceur-runtime'] = '>=' + this.traceurVersion;
+                if (this.es6) {
+                    this.bowerDependencies['traceur-runtime'] = '>=' + this.traceurVersion;
+                }
+
+                if (this.jquery) {
+                    this.bowerDependencies.jquery = '>=1.9.0';
+                }
+
+                this.bowerDependencies = JSON.stringify(this.bowerDependencies).replace(/,/g, ',\n  ');
+                this.template('bower.json');
+                this.copy('.bowerrc', '.bowerrc');
             }
 
-            if (this.jquery) {
-                this.bowerDependencies.jquery = '>=1.9.0';
+            //browserstack
+            if (this.browserstack) {
+                this.template('browserstack.json');
+                this.template('browserstack.html');
             }
-
-            this.bowerDependencies = JSON.stringify(this.bowerDependencies).replace(/,/g, ',\n  ');
-            this.template('bower.json');
-            this.copy('.bowerrc', '.bowerrc');
         }
 
         //stylus
-        if (this.style) {
+        if (this.stylus) {
             this.mkdir('style');
             this.mkdir('style/variables');
             this.write('style/variables/all.styl', '');
-        }
-
-        //browserstack
-        if (this.browserstack) {
-            this.template('browserstack.json');
-            this.template('browserstack.html');
         }
     }
 });

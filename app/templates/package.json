@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "scripts": {
     "test": "grunt test",
-    "build": "grunt build"
+    "build": "grunt build",
+    "watch": "grunt watch"
   },
   "dependencies": {
     "grunt-cli": "^0.1.13",
-    "grunt": "^0.4.2",<% if (style) { %>
+    "grunt": "^0.4.2",<% if (stylus) { %>
     "grunt-contrib-stylus": "^0.13.2",<% } %><% if (es6) { %>
     "grunt-traceur-compiler": "<%= traceurVersion %>",<% } %>
     "grunt-contrib-uglify": "^0.4.0"
