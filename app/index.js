@@ -26,6 +26,7 @@ module.exports = yeoman.generators.Base.extend({
                         rimraf.sync(self.destinationRoot() + '/lib/jquery/dist');
                         rimraf.sync(self.destinationRoot() + '/lib/jquery/src');
                     }
+                    self.spawnCommand('grunt', ['build']);
                     done();
                 };
 
@@ -33,10 +34,6 @@ module.exports = yeoman.generators.Base.extend({
                 skipInstall: self.options['skip-install'],
                 callback: cleanup
             })
-        });
-
-        self.on('dependenciesInstalled', function() {
-            self.spawnCommand('grunt', ['build']);
         });
     },
 
