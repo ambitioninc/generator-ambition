@@ -126,6 +126,9 @@ module.exports = yeoman.generators.Base.extend({
         //copy the common configs
         this.copy('.editorconfig', '.editorconfig');
 
+        //make common directories
+        this.mkdir('build');
+
         if (this.es5 || this.es6) {
             //js files
             this.copy('.jshintrc', '.jshintrc');

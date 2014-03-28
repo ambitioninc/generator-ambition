@@ -157,7 +157,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('buildStyle', ['stylus']);
     <% } %>
-
     if (isDev) {<% if (es5 || es6) { %>
         //tasks for developing with JavaScript
         npmTasks.push('grunt-contrib-jasmine');
@@ -206,8 +205,7 @@ module.exports = function(grunt) {
             watch: watchConfig
         });
         grunt.registerTask('default', ['watch']);
-        grunt.registerTask('watch', ['watch']);
-        <% } %>
+        grunt.registerTask('watch', ['watch']);<% } %>
     }
     grunt.registerTask('build', buildTasks);
     grunt.initConfig(gruntConfig);
