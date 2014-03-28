@@ -169,6 +169,7 @@ module.exports = yeoman.generators.Base.extend({
             this.mkdir('style');
             this.mkdir('style/variables');
             this.write('style/variables/all.styl', '');
+            this.write('style/' + this.projectName + '.styl', '');
             this.write('build/' + this.projectName + '.css', '');
         }
     }
